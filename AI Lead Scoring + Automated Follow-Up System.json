@@ -1,0 +1,573 @@
+{
+  "name": "AI Lead Scoring + Automated Follow-Up System",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-scoring",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "01bcd8ac-2df5-4f59-894e-7548bc3c50b9",
+      "name": "Webhook",
+      "webhookId": "e7fa21a7-83cf-4050-b488-9ba9e29fbd7f"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "044aae80-2715-44e8-91a4-423d831acdf4",
+              "name": "lead_id",
+              "value": "={{ $json.body.lead_id }}",
+              "type": "string"
+            },
+            {
+              "id": "f18b9260-7629-4641-9727-64e67851ceb2",
+              "name": "name",
+              "value": "={{ $json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "0a53293d-096f-4426-9857-2091f61f1ab7",
+              "name": "email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "068a0505-4f27-41c1-8a7e-bc72ce57f1c0",
+              "name": "company",
+              "value": "={{ $json.body.company }}",
+              "type": "string"
+            },
+            {
+              "id": "5b7f2650-85df-4142-95a9-95cc84532357",
+              "name": "job_title",
+              "value": "={{ $json.body.job_title }}",
+              "type": "string"
+            },
+            {
+              "id": "f63293ba-9eb6-4033-a72b-255c0d8e7956",
+              "name": "industry",
+              "value": "={{ $json.body.industry }}",
+              "type": "string"
+            },
+            {
+              "id": "c79e51f4-73a4-44cf-aed9-9ea1aebe908e",
+              "name": "company_size",
+              "value": "={{ $json.body.company_size }}",
+              "type": "string"
+            },
+            {
+              "id": "d826104b-f6bb-413b-b84a-aa4c0e4480bb",
+              "name": "service",
+              "value": "={{ $json.body.service }}",
+              "type": "string"
+            },
+            {
+              "id": "e8d3bb87-2993-4eb5-bf4e-3b09d3b3486c",
+              "name": "budget",
+              "value": "={{ $json.body.budget }}",
+              "type": "string"
+            },
+            {
+              "id": "7adca2f3-3e3b-4690-bebd-5ee9054cba43",
+              "name": "timeline",
+              "value": "={{ $json.body.timeline }}",
+              "type": "string"
+            },
+            {
+              "id": "eae75acc-edbe-4037-a041-2b507a1994a6",
+              "name": "employees",
+              "value": "={{ $json.body.employees }}",
+              "type": "string"
+            },
+            {
+              "id": "4741530d-b55b-40c8-a940-03272eea2153",
+              "name": "current_problem",
+              "value": "={{ $json.body.current_problem}}",
+              "type": "string"
+            },
+            {
+              "id": "a4375ae1-38cc-427f-bce1-a52e7a207cc3",
+              "name": "decision_maker",
+              "value": "={{ $json.body.decision_maker}}",
+              "type": "string"
+            },
+            {
+              "id": "d3e47969-1a3f-44f5-800f-8058583619bb",
+              "name": "previous_contact",
+              "value": "={{ $json.body.previous_contact}}",
+              "type": "string"
+            },
+            {
+              "id": "d24b418e-1e3b-4392-b98e-363245e54260",
+              "name": "source",
+              "value": "={{ $json.body.source }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "c774de1e-867e-4136-8a00-42e526ad281d",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-5-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are an expert B2B sales lead qualification assistant.\n\nAnalyze this lead and determine how valuable and ready this lead is.\n\nLead ID: {{ $json.lead_id }}\nName: {{ $json.name }}\nCompany: {{ $json.company }}\nJob Title: {{ $json.job_title }}\nIndustry: {{ $json.industry }}\nCompany Size: {{ $json.company_size }}\nService Interested In: {{ $json.service }}\nBudget: {{ $json.budget }}\nTimeline: {{ $json.timeline }}\nEmployees: {{ $json.employees }}\nCurrent Problem: {{ $json.current_problem }}\nDecision Maker: {{ $json.decision_maker }}\nPrevious Contact: {{ $json.previous_contact }}\nSource: {{ $json.source }}\n\nConsider:\n- Budget\n- Urgency/timeline\n- Business need\n- Decision-making authority\n- Company size\n- Fit for the service\n\nCalculate a Lead Score from 0 to 100.\n\nClassification rules:\n80-100 = Hot\n50-79 = Warm\n0-49 = Cold\n\nAlso recommend the appropriate sales action.\n\nReturn EXACTLY:\n\nLead Score: [0-100]\nClassification: [Hot/Warm/Cold]\nLead Quality: [High/Medium/Low]\nReason: [short explanation]\nRecommended Action: [action]\nFollow Up Days: [number]\nFollow Up Message: [professional sales message]"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "40843448-501a-40f0-abe7-05d0bc37d951",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ty1B1MTMGN7t4P4f",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ed2493e0-187f-414c-81ec-aabcccc749e6",
+              "name": "Lead Score",
+              "value": "={{ $('Message a model').item.json.output[0].content[0].text.match(/Lead Score:\\s*\\[?(.*?)\\]?$/m)?.[1].trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "c00e1435-d9b1-466c-9830-918f13937645",
+              "name": "Classification",
+              "value": "={{ $('Message a model').item.json.output[0].content[0].text.match(/Classification:\\s*\\[?(.*?)\\]?$/m)?.[1].trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "3bc29dff-c8a5-4335-9140-5b00b73b790f",
+              "name": "Lead Quality",
+              "value": "={{ $('Message a model').item.json.output[0].content[0].text.match(/Lead Quality:\\s*\\[?(.*?)\\]?$/m)?.[1].trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "cefb56c6-5263-4c2d-8a49-b9c77fd8ad84",
+              "name": "Reason",
+              "value": "={{ $('Message a model').item.json.output[0].content[0].text.match(/Reason:\\s*\\[?(.*?)\\]?$/m)?.[1].trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "a4b67643-d5bf-468d-aa6d-4fb9e8f71477",
+              "name": "Recommended Action",
+              "value": "={{ $('Message a model').item.json.output[0].content[0].text.match(/Recommended Action:\\s*\\[?(.*?)\\]?$/m)?.[1].trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "cc617ee3-a2d6-4509-85c5-c77ad611bceb",
+              "name": "Follow Up Days",
+              "value": "={{ $('Message a model').item.json.output[0].content[0].text.match(/Follow Up Days:\\s*\\[?(.*?)\\]?$/m)?.[1].trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "522655fe-eca2-447d-a19b-f3f6abc95fc3",
+              "name": "Follow Up Message",
+              "value": "={{ $('Message a model').item.json.output[0].content[0].text.match(/Follow Up Message:\\s*([\\s\\S]*)/)?.[1].trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        816,
+        0
+      ],
+      "id": "0e74df45-764c-4621-b557-539e669902be",
+      "name": "Format AI Result"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1IO7K_p08uNztnBNmo91MI7AD0cZ8csfyv2uZNde0bKA",
+          "mode": "list",
+          "cachedResultName": "AI Lead Scoring",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IO7K_p08uNztnBNmo91MI7AD0cZ8csfyv2uZNde0bKA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IO7K_p08uNztnBNmo91MI7AD0cZ8csfyv2uZNde0bKA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead ID": "={{ $('Edit Fields').item.json.lead_id }}",
+            "Name ": "={{ $('Edit Fields').item.json.name }}",
+            "Email": "={{ $('Edit Fields').item.json.email }}",
+            "Company": "={{ $('Edit Fields').item.json.company }}",
+            "Job Title": "={{ $('Edit Fields').item.json.job_title }}",
+            "Industry": "={{ $('Edit Fields').item.json.industry }}",
+            "Service": "={{ $('Edit Fields').item.json.service }}",
+            "Budget": "={{ $('Edit Fields').item.json.budget }}",
+            "Timeline": "={{ $('Edit Fields').item.json.timeline }}",
+            "Lead Score": "={{ $('Format AI Result').item.json.lead_score }}",
+            "Classification": "={{ $('Format AI Result').item.json.classification }}",
+            "Lead Quality": "={{ $('Format AI Result').item.json.lead_quality }}",
+            "Reason": "={{ $('Format AI Result').item.json.reason }}",
+            "Recommended Action": "={{ $('Format AI Result').item.json.recommended_action }}",
+            "Follow Up Days": "={{ $('Format AI Result').item.json.follow_up_days }}",
+            "Follow Up Message": "={{ $('Format AI Result').item.json.follow_up_message }}",
+            "Date": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Lead ID",
+              "displayName": "Lead ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name ",
+              "displayName": "Name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Job Title",
+              "displayName": "Job Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Industry",
+              "displayName": "Industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timeline",
+              "displayName": "Timeline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Classification",
+              "displayName": "Classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Quality",
+              "displayName": "Lead Quality",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Reason",
+              "displayName": "Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Recommended Action",
+              "displayName": "Recommended Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Follow Up Days",
+              "displayName": "Follow Up Days",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Follow Up Message",
+              "displayName": "Follow Up Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        128,
+        224
+      ],
+      "id": "5a9ca6d2-381f-4e97-8283-021ecd789338",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QRIVcmj9yXaYOS4l",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0601b2d8-0824-45d2-a877-171e93216950",
+              "leftValue": "={{ $('Format AI Result').item.json.Classification }}",
+              "rightValue": "Hot",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        224
+      ],
+      "id": "af69eeab-a505-4085-a34c-0d5dbc4b9227",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json.email }}",
+        "subject": "=Thank you for your interest in {{ $('Edit Fields').item.json.service }}",
+        "message": "=Hi {{ $('Edit Fields').item.json.name }},  Thank you for your interest in our {{ $('Edit Fields').item.json.service }}.  Based on the requirements you shared, we believe our solution could be a strong fit for {{ $('Edit Fields').item.json.company }}.  {{ $('Format AI Result').item.json['Follow Up Message'] }}  We would be happy to discuss your requirements and explore the next steps.  Best regards, AI Automation Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        208
+      ],
+      "id": "307264a4-aef0-4dec-888b-c2a7e3e6fdf6",
+      "name": "Send a message",
+      "webhookId": "ec6efb47-5654-4d54-b1f1-7ee82fc1d363",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Sl2L6YNdyLlBwjdX",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Format AI Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format AI Result": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d6076dd2-66eb-4039-a424-1b66e8f64290",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f149c2e630b09b15ed9c07322639685aba0f73acf94e0d2958a9d726ede4c15b"
+  },
+  "nodeGroups": [],
+  "id": "4IV64k1BFYgxpf3W",
+  "tags": []
+}
